@@ -3,12 +3,21 @@ import { StringType } from '../constant/string_type.js';
 
 const shopSchema = mongoosee.Schema({
   name: StringType,
+  shopAdmin: {
+    type: mongoosee.Schema.Types.ObjectId,
+    ref: 'ShopAdmin',
+    unique: true,
+    required: true,
+  },
   pics: [String],
   services: [
     {
       serviceName: StringType,
       servicePic: String,
-      servicePrice: StringType,
+      servicePrice: {
+        type: Number,
+        required: true,
+      },
     },
   ],
 });
