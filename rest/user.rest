@@ -1,0 +1,14 @@
+@contentType = application/json 
+
+###
+POST http://localhost:5000/shops  HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+  "shopAdmin": "61b89faa36e272cb329c9666",
+  "name": "Manny salon",
+  "services": {
+    "serviceName": "Nani",
+    "servicePrice": 200
+  }
+}

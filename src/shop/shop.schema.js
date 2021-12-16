@@ -6,10 +6,16 @@ const shopSchema = mongoosee.Schema({
   shopAdmin: {
     type: mongoosee.Schema.Types.ObjectId,
     ref: 'ShopAdmin',
-    unique: true,
     required: true,
   },
   pics: [String],
+  barbers: [
+    {
+      type: mongoosee.Schema.Types.ObjectId,
+      ref: 'Barber',
+      required: true,
+    },
+  ],
   services: [
     {
       serviceName: StringType,

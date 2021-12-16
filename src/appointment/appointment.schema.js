@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { DAYS } from '../constant/days_enum';
-import { StringType } from '../constant/string_type';
+import { DAYS } from '../constant/days_enum.js';
+import { STATUS } from '../constant/status_enum.js';
+import { StringType } from '../constant/string_type.js';
 
 const appointmentSchema = mongoose.Schema(
   {
@@ -28,9 +29,10 @@ const appointmentSchema = mongoose.Schema(
       required: true,
     },
 
-    day: {
-      ...StringType,
-      enum: Object.values(DAYS),
+    status: {
+      type: String,
+      default: STATUS.PENDING,
+      enum: Object.values(STATUS),
     },
   },
   {
