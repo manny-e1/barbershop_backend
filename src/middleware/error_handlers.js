@@ -1,10 +1,7 @@
 import createError from 'http-errors';
 
 function notFound(req, _, next) {
-  const error = createError.notFound(
-    `Not Found - ${req.method} ${req.originalUrl}`
-  );
-  next(error);
+  next(createError(404, `Not Found - ${req.method} ${req.originalUrl}`));
 }
 
 function IsJsonString(str) {
@@ -22,8 +19,9 @@ function errorCatcher(fn) {
   };
 }
 
-function errorHandler(err, _, res) {
+function errorHandler(err, _, res, next) {
   const statusCode = err.statusCode || 500;
+  console.log(err);
   res.status(statusCode).json({
     message: IsJsonString(err.message) ? JSON.parse(err.message) : err.message,
   });

@@ -1,6 +1,6 @@
 import createError from 'http-errors';
-import mongoose from 'mongoose';
 import { ROLE } from '../constant/role_enum.js';
+import { checkID } from '../helpers/check_id.js';
 import { createShop, getShop, getShops } from './shop.service.js';
 
 export async function httpCreateShop(req, res) {
@@ -14,16 +14,18 @@ export async function httpCreateShop(req, res) {
   }
 
   shop.barbers?.forEach((barber) => {
-    if (!mongoose.isValidObjectId(barber))
-      throw createError.UnprocessableEntity('please enter real barbers');
+    checkID(
+      barber,
+      createError.UnprocessableEntity,
+      'please enter real barbers'
+    );
   });
 
   res.status(201).json(await createShop(shop));
 }
 
 export async function httpGetShop(req, res) {
-  if (!mongoose.isValidObjectId(req.params.id))
-    throw createError.NotFound("Shop doesn't exist");
+  checkID(req.params.id, createError.NotFound, "Shop doesn't exist");
 
   const shop = await getShop(req.params.id);
   if (!shop) throw createError.NotFound("Shop doesn't exist");
@@ -37,8 +39,7 @@ export async function httpGetShops(req, res) {
 }
 
 export async function httpModifyShop(req, res) {
-  if (!mongoose.isValidObjectId(req.param.id))
-    throw createError.NotFound("Shop doesn't exist");
+  checkID(req.params.id, createError.NotFound, "Shop doesn't exist");
 
   const shop = await getShop(req.params.id);
   if (!shop) throw createError.NotFound("Shop doesn't exist");
@@ -48,7 +49,8 @@ export async function httpModifyShop(req, res) {
 }
 
 export async function httpDeleteShop(req, res) {
+  checkID(req.params.id, createError.NotFound, "Shop doesn't exist");
   const shop = await getShop(req.params.id);
-  if (!shop) throw new Error("Shop doesn't exist");
+  if (!shop) throw createError.NotFound("Shop doesn't exist");
   res.status(200).json(req.params.id);
 }
