@@ -1,9 +1,9 @@
 export const DAYS = Object.freeze({
-  MONDAY: 'Monday',
-  TUESDAY: 'Tuesday',
-  WENDSDAY: 'Wendsday',
-  THURSDAY: 'Thursday',
-  FRIDAY: 'Friday',
-  SATURDAY: 'Saturday',
-  SUNDAY: 'Sunday',
+  MONDAY: 'Mon',
+  TUESDAY: 'Tue',
+  WENDSDAY: 'Wen',
+  THURSDAY: 'Thu',
+  FRIDAY: 'Fri',
+  SATURDAY: 'Sat',
+  SUNDAY: 'Sun',
 });
