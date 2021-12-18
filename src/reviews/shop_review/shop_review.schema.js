@@ -23,4 +23,4 @@ const shopReviewSchema = mongoose.Schema(
   }
 );
 
-export const ShopReviewSchema = mongoose.model('ShopReview', shopReviewSchema);
+export const ShopReviewModel = mongoose.model('ShopReview', shopReviewSchema);

@@ -10,9 +10,14 @@ import {
 } from './barber_review.service.js';
 
 import { ROLE } from '../../constant/role_enum.js';
+import { getUser } from '../../user/user.service.js';
 
 export async function httpReviewBarber(req, res) {
   checkID(req.body.barber, createError.NotFound, "Barber doesn't exist");
+
+  const barberExists = await getUser({ _id: req.body.barber });
+
+  if (!barberExists) throw createError.NotFound('Barber does not exist');
 
   const alreadyReviewed = await getBarberReview({
     reviewer: req.user.aud,
@@ -21,8 +26,6 @@ export async function httpReviewBarber(req, res) {
 
   if (alreadyReviewed)
     throw createError.Conflict("You've already given your review");
-
-  console.log(req.body);
 
   let review = {};
 
