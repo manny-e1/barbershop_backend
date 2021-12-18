@@ -25,7 +25,8 @@ export const signAccessToken = (userId, role) => {
   });
 };
 export const verifyAccessToken = (req, res, next) => {
-  if (!req.headers['authorization']) throw createError.Unauthorized();
+  if (!req.headers['authorization'])
+    throw createError.Unauthorized('Unauthorized, no token');
   const authHeader = req.headers['authorization'];
   const bearerToken = authHeader.split(' ');
   const token = bearerToken[1];

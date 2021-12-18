@@ -13,8 +13,9 @@ export async function httpRegisterUser(req, res) {
 
 export async function httpLogin(req, res) {
   const user = await getUser({ email: req.body.email });
+  if (!user) throw createError.Unauthorized('Invalid Credential');
   if (user.password !== req.body.password)
-    throw createError[401]('Invalid Credential');
+    throw createError.Unauthorized('Invalid Credential');
   const token = await signAccessToken(user.id, user.role);
   res.status(200).json({ success: true, token });
 }
