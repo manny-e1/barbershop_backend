@@ -1,5 +1,6 @@
 @contentType = application/json 
 
+GET http://localhost:5000
 
 ###register
 POST http://localhost:5000/auth/register HTTP/1.1
