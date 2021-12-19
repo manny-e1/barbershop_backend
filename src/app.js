@@ -28,6 +28,8 @@ import shopRouter from './shop/shop.route.js';
 import authRouter from './user/user.route.js';
 import barberReviewRouter from './reviews/barber_review/barber_review.route.js';
 import shopReviewRouter from './reviews/shop_review/shop_review.route.js';
+import appointmentRouter from './appointment/appointment.route.js';
+
 import {
   calculateDateDifference,
   dateSpliter,
@@ -139,6 +141,7 @@ app.use('/shops', shopRouter);
 app.use('/auth', authRouter);
 app.use('/barber_reviews', barberReviewRouter);
 app.use('/shop_reviews', shopReviewRouter);
+app.use('/appointments', appointmentRouter);
 
 app.use(notFound);
 app.use(errorHandler);

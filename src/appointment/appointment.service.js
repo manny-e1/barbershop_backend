@@ -1,42 +1,22 @@
-import { differenceInHours } from 'date-fns';
-import parseISO from 'date-fns/parseISO';
+import { addDays, parseISO } from 'date-fns';
 import createError from 'http-errors';
 import { ROLE } from '../constant/role_enum.js';
-import { calculateDateDifference } from '../helpers/calculate_date_difference.js';
 import { getShop } from '../shop/shop.service.js';
 import { AppointmentModel } from './appointment.schema.js';
 
 export async function bookAppointment(appointment) {
-  const dateBetween = calculateDateDifference(appointment.startTime.toString);
-  if (dateBetween > 7)
-    throw createError.BadRequest('Please choose a date within 7 days range');
-
   const ableToBook = await getShop(appointment.shop);
   if (!ableToBook && ableToBook.barber !== appointment.barber)
     throw createError.BadRequest('Unable to book an appointment');
 
-  if (
-    differenceInHours(
-      parseISO(appointment.endTime.toString) -
-        parseISO(appointment.startTime.toString)
-    ) > 2
-  )
-    throw createError.BadRequest(
-      "You can't book an appointment for more than 2 hours"
-    );
+  const stTime = new Date(appointment.startTime);
+
   const appointmentExists = await getAppointment({
     client: appointment.client,
     shop: appointment.shop,
     startTime: {
-      $gt: new Date(
-        new Date(appointment.startTime.toString()).setUTCHours(0, 0, 0, 0)
-      ),
-      $lt: addDays(
-        new Date(
-          new Date(appointment.startTime.toString()).setUTCHours(0, 0, 0, 0)
-        ),
-        1
-      ),
+      $gte: new Date(stTime.setUTCHours(0, 0, 0, 0)),
+      $lte: addDays(new Date(stTime.setUTCHours(0, 0, 0, 0)), 1),
     },
   });
 
@@ -50,12 +30,12 @@ export async function bookAppointment(appointment) {
     $or: [
       {
         startTime: {
-          $gte: new Date(parseISO(appointment.startTime.toString())),
-          $lte: new Date(parseISO(appointment.endTime.toString())),
+          $gt: appointment.startTime,
+          $lt: appointment.endTime,
         },
         endTime: {
-          $gte: new Date(parseISO(appointment.startTime.toString())),
-          $lte: new Date(parseISO(appointment.endTime.toString())),
+          $gt: appointment.startTime,
+          $lt: appointment.endTime,
         },
       },
     ],
@@ -76,14 +56,14 @@ export async function getAllAppointments(filter) {
   return AppointmentModel.find(filter);
 }
 
-export async function getShopAppointmets(shopID, filter) {
+export async function getShopAppointments(shopID, filter) {
   return AppointmentModel.find({
     shop: shopID,
     ...filter,
   });
 }
 
-export async function getBarberAppointmets(barberID, filter) {
+export async function getBarberAppointments(barberID, filter) {
   return AppointmentModel.find({
     barber: barberID,
     ...filter,
@@ -96,12 +76,12 @@ export async function updateAppointment(id, appointment, currentUser) {
     throw createError.NotFound('Appointment does not exist');
 
   if (
-    appointment.client !== currentUser.aud &&
+    appointmentExists.client.toString() !== currentUser.aud &&
     currentUser.aud !== ROLE.SHOPADMIN
   )
     throw createError.Forbidden("You can't perform this action");
 
-  return AppointmentModel.updateOne(id, appointment);
+  return AppointmentModel.updateOne({ _id: id }, appointment);
 }
 
 export async function deleteAppointment(id) {
