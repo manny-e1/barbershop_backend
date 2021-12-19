@@ -3,12 +3,17 @@ import parseISO from 'date-fns/parseISO';
 import createError from 'http-errors';
 import { ROLE } from '../constant/role_enum.js';
 import { calculateDateDifference } from '../helpers/calculate_date_difference.js';
+import { getShop } from '../shop/shop.service.js';
 import { AppointmentModel } from './appointment.schema.js';
 
 export async function bookAppointment(appointment) {
   const dateBetween = calculateDateDifference(appointment.startTime.toString);
   if (dateBetween > 7)
     throw createError.BadRequest('Please choose a date within 7 days range');
+
+  const ableToBook = await getShop(appointment.shop);
+  if (!ableToBook && ableToBook.barber !== appointment.barber)
+    throw createError.BadRequest('Unable to book an appointment');
 
   if (
     differenceInHours(
