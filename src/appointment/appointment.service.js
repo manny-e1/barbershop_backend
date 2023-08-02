@@ -49,25 +49,58 @@ export async function bookAppointment(appointment) {
 }
 
 export async function getAppointment(filter) {
-  return AppointmentModel.findOne(filter);
+  return AppointmentModel.findOne(filter)
+    .populate('shop')
+    .populate('client')
+    .populate('barber');
 }
 
 export async function getAllAppointments(filter) {
-  return AppointmentModel.find(filter);
+  return AppointmentModel.find(filter)
+    .populate('client')
+    .populate({
+      path: 'shop',
+      populate: { path: 'shopAdmin' },
+    })
+    .populate({
+      path: 'shop',
+      populate: { path: 'barbers' },
+    })
+    .populate('barber');
 }
 
 export async function getShopAppointments(shopID, filter) {
   return AppointmentModel.find({
     shop: shopID,
     ...filter,
-  });
+  })
+    .populate('client')
+    .populate({
+      path: 'shop',
+      populate: { path: 'shopAdmin' },
+    })
+    .populate({
+      path: 'shop',
+      populate: { path: 'barbers' },
+    })
+    .populate('barber');
 }
 
 export async function getBarberAppointments(barberID, filter) {
   return AppointmentModel.find({
     barber: barberID,
     ...filter,
-  });
+  })
+    .populate('client')
+    .populate({
+      path: 'shop',
+      populate: { path: 'shopAdmin' },
+    })
+    .populate({
+      path: 'shop',
+      populate: { path: 'barbers' },
+    })
+    .populate('barber');
 }
 
 export async function updateAppointment(id, appointment, currentUser) {

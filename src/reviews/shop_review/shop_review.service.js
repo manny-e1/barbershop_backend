@@ -5,17 +5,44 @@ export async function reviewShop(review) {
 }
 
 export async function getShopReview(filter) {
-  return ShopReviewModel.findOne(filter);
+  return ShopReviewModel.findOne(filter)
+    .populate('reviewer')
+    .populate({
+      path: 'shop',
+      populate: { path: 'shopAdmin' },
+    })
+    .populate({
+      path: 'shop',
+      populate: { path: 'barbers' },
+    });
 }
 
 export async function getShopReviews(shopId) {
   return ShopReviewModel.find({
     shop: shopId,
-  });
+  })
+    .populate('reviewer')
+    .populate({
+      path: 'shop',
+      populate: { path: 'shopAdmin' },
+    })
+    .populate({
+      path: 'shop',
+      populate: { path: 'barbers' },
+    });
 }
 
 export async function getAllShopReviews() {
-  return ShopReviewModel.find();
+  return ShopReviewModel.find()
+    .populate('reviewer')
+    .populate({
+      path: 'shop',
+      populate: { path: 'shopAdmin' },
+    })
+    .populate({
+      path: 'shop',
+      populate: { path: 'barbers' },
+    });
 }
 
 export async function updateShopReview(id, review) {

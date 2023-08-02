@@ -9,6 +9,7 @@ import {
 } from './user.schema.js';
 
 export async function registerUser(user) {
+  console.log(user);
   switch (user.role) {
     case ROLE.ADMIN:
       return AdminModel.create({ ...user });

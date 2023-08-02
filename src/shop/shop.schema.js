@@ -16,6 +16,10 @@ const shopSchema = mongoosee.Schema({
       required: true,
     },
   ],
+  location: {
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+  },
   services: [
     {
       serviceName: StringType,

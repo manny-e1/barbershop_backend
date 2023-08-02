@@ -25,7 +25,7 @@ import {
 import { errorHandler, notFound } from './middleware/error_handlers.js';
 
 import shopRouter from './shop/shop.route.js';
-import authRouter from './user/user.route.js';
+import { authRouter, userRouter } from './user/user.route.js';
 import barberReviewRouter from './reviews/barber_review/barber_review.route.js';
 import shopReviewRouter from './reviews/shop_review/shop_review.route.js';
 import appointmentRouter from './appointment/appointment.route.js';
@@ -35,6 +35,7 @@ import {
   dateSpliter,
 } from './helpers/calculate_date_difference.js';
 import { AppointmentModel } from './appointment/appointment.schema.js';
+import { Router } from 'express';
 
 dotenv.config();
 connectDatabase();
@@ -137,11 +138,48 @@ app.get('/', async (req, res) => {
   //   res.send((appoint.startTime, appoint.endTime));
 });
 
+const persons = [
+  {
+    name: 'bebe 1',
+    age: 23,
+  },
+  {
+    name: 'manny 1',
+    age: 23,
+  },
+  {
+    name: 'agim 1',
+    age: 23,
+  },
+];
+const persons2 = [
+  {
+    name: 'bebe 2',
+    age: 23,
+  },
+  {
+    name: 'manny 2',
+    age: 23,
+  },
+  {
+    name: 'agim 2',
+    age: 23,
+  },
+];
+
 app.use('/shops', shopRouter);
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 app.use('/barber_reviews', barberReviewRouter);
 app.use('/shop_reviews', shopReviewRouter);
 app.use('/appointments', appointmentRouter);
+app.get('/persons', (req, res) => {
+  res.status(200).json(persons);
+});
+
+app.get('/persons2', (req, res) => {
+  res.status(200).json(persons2);
+});
 
 app.use(notFound);
 app.use(errorHandler);

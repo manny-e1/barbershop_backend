@@ -1,4 +1,5 @@
 import createError from 'http-errors';
+import { checkID } from '../helpers/check_id.js';
 import { signAccessToken } from '../middleware/jwt_helpers.js';
 import { getUser, registerUser } from './user.service.js';
 
@@ -16,6 +17,17 @@ export async function httpLogin(req, res) {
   if (!user) throw createError.Unauthorized('Invalid Credential');
   if (user.password !== req.body.password)
     throw createError.Unauthorized('Invalid Credential');
-  const token = await signAccessToken(user.id, user.role);
-  res.status(200).json({ success: true, token });
+  const accessToken = await signAccessToken(user.id, user.role);
+  res.status(200).json({ accessToken });
+}
+
+export async function httpGetUserByID(req, res) {
+  checkID(
+    req.params.id,
+    createError.UnprocessableEntity,
+    'please enter a real ID'
+  );
+  const user = await getUser({ _id: req.params.id });
+  if (!user) throw createError.NotFound("user doesn't exist");
+  res.status(200).json(user);
 }

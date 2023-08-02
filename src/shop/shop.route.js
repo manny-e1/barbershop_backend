@@ -16,6 +16,7 @@ import {
 
 const router = express.Router();
 
+router.route('/ss').get((req,res) => {res.send({hi:"hi"})})
 router
   .route('/')
   .post(
@@ -23,7 +24,9 @@ router
     errorCatcher(isAdminOrShopAdmin),
     errorCatcher(httpCreateShop)
   )
-  .get(errorCatcher(verifyAccessToken), errorCatcher(httpGetShops));
+  .get(
+  errorCatcher(verifyAccessToken),
+   errorCatcher(httpGetShops));
 router
   .route('/:id')
   .get(errorCatcher(verifyAccessToken), errorCatcher(httpGetShop))

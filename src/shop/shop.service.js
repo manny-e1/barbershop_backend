@@ -5,11 +5,11 @@ export async function createShop(shop) {
 }
 
 export async function getShop(id) {
-  return ShopModel.findById(id);
+  return ShopModel.findById(id).populate('barbers').populate('shopAdmin');
 }
 
 export async function getShops(filter) {
-  return ShopModel.find(filter);
+  return ShopModel.find(filter).populate('barbers').populate('shopAdmin');
 }
 
 export async function modifyShop(id, shop) {
